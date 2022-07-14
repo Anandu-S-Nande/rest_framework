@@ -4,12 +4,17 @@ from watchlist.models import Movie
 ###################################THIS IS MODELSERIALIZER######################################
 
 class MovieSerializer(serializers.ModelSerializer):
+    len_name = serializers.SerializerMethodField() #customize the model add extra field inside serailizer.py
+
     class Meta:
         model = Movie
         fields = '__all__'
         #fields = ['id','name','description']
         #exclude = ['active']  Cannot set both 'fields' and 'exclude' options on serializer MovieSerializer.
-
+    
+    def get_len_name(self, object):  #customize the model add extra field inside serailizer.py
+        length = len(object.name)
+        return length
 
     def validate(self, data):
         if data['name'] == data['description']:
