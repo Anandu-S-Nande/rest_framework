@@ -1,11 +1,28 @@
 from rest_framework import serializers
 from watchlist.models import Movie
 
+###################################THIS IS MODELSERIALIZER######################################
 
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        field = "__all__"
+        fields = '__all__'
+        #fields = ['id','name','description']
+        #exclude = ['active']  Cannot set both 'fields' and 'exclude' options on serializer MovieSerializer.
+
+
+    def validate(self, data):
+        if data['name'] == data['description']:
+            raise serializers.ValidationError("Title and description should be different")  ##validation by field
+        else:
+            return data
+
+
+    def validate_name(self, value):  
+        if len(value) < 2:
+            raise serializers.ValidationError("Name is too short")  ### validation by object
+        else:
+            return value
 
 
 
