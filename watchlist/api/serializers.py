@@ -1,10 +1,22 @@
+from asyncore import read
+from re import T
 from rest_framework import serializers
-from watchlist.models import WatchList , StreamPlatform
+import watchlist
+from watchlist.models import WatchList , StreamPlatform , Review
 
 ###################################THIS IS MODELSERIALIZER######################################
 
+class ReviewSerializer(serializers.ModelSerializer):
+
+    class meta:
+        models = Review
+        fields = '__all__'
+
+
+
 class WatchListSerializer(serializers.ModelSerializer):
    # len_name = serializers.SerializerMethodField() #customize the model add extra field inside serailizer.py
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = WatchList
@@ -14,6 +26,12 @@ class WatchListSerializer(serializers.ModelSerializer):
     
 
 class StreamPlatformSerializer(serializers.ModelSerializer):
+    watchlist = WatchListSerializer(many=True, read_only=True) # here watchlist name is mentioned in the model.py as realated name
+    # watchlist =  serializers.HyperlinkedRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     view_name='movie_deatils'
+    # )
     
     class Meta:
         model = StreamPlatform
