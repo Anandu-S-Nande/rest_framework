@@ -1,5 +1,3 @@
-from asyncore import read
-from re import T
 from rest_framework import serializers
 import watchlist
 from watchlist.models import WatchList , StreamPlatform , Review
@@ -8,9 +6,10 @@ from watchlist.models import WatchList , StreamPlatform , Review
 
 class ReviewSerializer(serializers.ModelSerializer):
 
-    class meta:
-        models = Review
-        fields = '__all__'
+    class Meta:
+        model = Review
+        exclude = ('watchlist',)
+        # fields = '__all__'
 
 
 

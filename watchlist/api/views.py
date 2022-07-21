@@ -1,10 +1,71 @@
 #from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from watchlist.models import WatchList , StreamPlatform
-from .serializers import WatchListSerializer , StreamPlatformSerializer
+from watchlist.models import WatchList , StreamPlatform , Review
+from .serializers import WatchListSerializer , StreamPlatformSerializer , ReviewSerializer
 from rest_framework import status
+from rest_framework import generics
+#from rest_framework import mixins
+from rest_framework import viewsets
 
+
+##################################### CONCREATE VIEW ######################################################################
+
+class ReviewCreate(generics.CreateAPIView):
+    serializer_class = ReviewSerializer
+
+
+    def perform_create(self, serializer):
+        pk = self.kwargs.get('pk')
+        movie =  WatchList.objects.get(pk=pk)
+        serializer.save(watchlist=movie)
+        
+
+class ReviewList(generics.ListAPIView):
+    #queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Review.objects.filter(watchlist=pk)
+
+
+class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+
+###################################### CONCREATE VIEW ##########################################################################################
+
+# class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
+     
+     #we cannnot write get , post etc methods.
+
+################################### GENRIC APIView(MIXINS) ########################################################################
+
+# class ReviewDetail(mixins.RetrieveModelMixin, generics.GenericAPIView):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
+
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
+   
+
+
+# class ReviewList(mixins.ListModelMixin, mixins.CreateModelMixin,  generics.GenericAPIView):
+#     queryset = Review.objects.all()
+#     serializer_class = ReviewSerializer
+
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request, *args, **kwargs)  ## it is an another method of views. use mixins we can create get post methods easily   
+
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)
+
+##########################################CLASS BASE VIEW###############################################################################
 
 class WatchListAV(APIView):
 
@@ -46,6 +107,25 @@ class WatchDetailAV(APIView):
         movie = WatchList.objects.get(pk=pk)  ### DELETE method
         movie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+############################ VIEWSET & ROUTERS ##############################################################
+
+class StreamPlatformVS(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = StreamPlatform.objects.all()
+        serializer =  StreamPlatformSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = StreamPlatform.objects.all()
+        watchlist = get_object_or_404(queryset, pk=pk)
+        serializer = StreamPlatformSerializer(watchlist)
+        return Response(serializer.data)
+
+##########################################################################################################
+
 
 
 class StreamPlatformAV(APIView):
