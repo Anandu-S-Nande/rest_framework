@@ -23,7 +23,7 @@ class ReviewCreate(generics.CreateAPIView):
         pk = self.kwargs.get('pk')
         watchlist =  WatchList.objects.get(pk=pk)
  
-       ################ user check#######################
+       ################ user check 1 user can 1 review #######################
         review_user = self.request.user
         review_queryset = Review.objects.filter(watchlist=watchlist, review_user=review_user)
 
