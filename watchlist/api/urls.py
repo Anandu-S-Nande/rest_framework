@@ -6,6 +6,8 @@ from watchlist.api.views import (WatchListAV , WatchDetailAV , StreamPlatformAV 
 from rest_framework.routers import DefaultRouter
 
 
+
+
 router = DefaultRouter()
 router.register('stream', StreamPlatformVS, basename='streamplatform')
 
@@ -19,9 +21,9 @@ urlpatterns = [
     #path('stream/', StreamPlatformAV.as_view(), name="stream-list"),
     #path('stream/<int:pk>', StreamPlatformDetailsAV.as_view(), name="stream-deatils"),
 
-    path('stream/<int:pk>/review-create', ReviewCreate.as_view(), name="review-create"), #eg amazon review page
-    path('stream/<int:pk>/review', ReviewList.as_view(), name="review-list"),
-    path('stream/review/<int:pk>',  ReviewDetail.as_view(), name="review-detail"),
+    path('<int:pk>/review-create', ReviewCreate.as_view(), name="review-create"), #eg amazon review page
+    path('<int:pk>/review', ReviewList.as_view(), name="review-list"),
+    path('review/<int:pk>',  ReviewDetail.as_view(), name="review-detail"),
     
 
 
