@@ -49,7 +49,7 @@ class ReviewCreate(generics.CreateAPIView):
 class ReviewList(generics.ListAPIView):
     #queryset = Review.objects.all() 
     serializer_class = ReviewSerializer
-    permission_classes = [ReviewUserOrReadOnly] # permission in class like each objects
+    permission_classes = [ReviewUserOrReadOnly] # permission in class like each objects level
 
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -59,7 +59,7 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [ReviewUserOrReadOnly] # permission in class like each objects
+    permission_classes = [ReviewUserOrReadOnly] # permission in class like each objects level
 
 
 ###################################### CONCREATE VIEW ##########################################################################################

@@ -14,7 +14,7 @@ router.register('stream', StreamPlatformVS, basename='streamplatform')
 
 urlpatterns = [
     path('list/', WatchListAV.as_view(), name="movie-list"),
-    path('<int:pk>', WatchDetailAV.as_view(), name="movie-deatils"), ### THis is class base url
+    path('<int:pk>/', WatchDetailAV.as_view(), name="movie-deatils"), ### THis is class base url
 
     path('', include(router.urls)),
 
